@@ -7,53 +7,90 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## About Backend Engineer (Laravel/PHP) Intern – Technical Task
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The goal of this project is to build a simple, API-only backend system using Laravel, Laravel Passport, and PostgreSQL. The system should include user authentication, role-based access control (RBAC), and permission-driven operations applied specifically to the users module. Candidates will implement user login, role assignment, permission assignment, and protected CRUD endpoints where access is determined by the user’s assigned permissions. Additionally, the project requires integrating an external public API by creating an endpoint that fetches and returns user data from a third-party service. All responses must follow a standardized JSON structure. This task is designed to assess the candidate’s understanding of backend architecture, authentication, authorization logic, API development, and external API communication. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### You are required to build an API-only backend project using:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Laravel
+- Laravel Passport
+- PostgreSQL
+- No UI
+- No RBAC plugins/packages (e.g., Spatie, Laratrust → not allowed)
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### You are free to design your database tables, relationships, and structures as you believe best fits the RBAC system.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Authentication (Using Laravel Passport)
+ - Implement user authentication with:
+ - Registration
+ - Login
+ - Logout
+ - Passport token protection for secured endpoints
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### - 2. RBAC (Roles & Permissions) — Applied Only to User Management
 
-### Premium Partners
+You must implement a custom Role-Based Access Control system that restricts access to user-related actions.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Your design should include:
 
-## Contributing
+- Roles
+- Permissions
+- Assigning permissions to roles
+- Assigning roles to users
+- Authorization checks (via middleware)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Your RBAC logic must control access to the User CRUD module.
 
-## Code of Conduct
+### 3. User CRUD With Role + Permission Enforcement
+Implement:
+- Create User
+- Retrieve Users (list + single)
+- Update User
+- Delete User
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Design permissions for these actions as you see fit.
+Only authorized users should be allowed to perform each action.
 
-## Security Vulnerabilities
+### 4. External API Integration
+Create one endpoint:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+GET /external/users
 
-## License
+This endpoint must:
+Call the public API:
+https://jsonplaceholder.typicode.com/users
+Retrieve and return the list of users
+Follow the required response format
+Handle errors gracefully
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 5. Response Format (Required for All Endpoints)
+All responses must follow this structure:
+{
+  "success": true,
+  "code": 200,
+  "data": {},
+  "message": "message"
+}
+
+
+Error format:
+{
+  "success": false,
+  "code": 400,
+  "data": {},
+  "message": "error message"
+}
+
+📂 Deliverables
+### 1. GitHub Repository Link (Required)
+Must include:
+Laravel source code
+Migrations
+Models
+Controllers
+Middleware
+.env.example
+README.md with setup and run instructions
