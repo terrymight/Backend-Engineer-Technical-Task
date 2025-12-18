@@ -1,96 +1,291 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Backend Engineer (Laravel/PHP) Technical Assignment  
+**RAJ Consulting**
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Live API Base URL:**  
+👉 https://backend-engineer-technical-task.onrender.com
 
-## About Backend Engineer (Laravel/PHP) Intern – Technical Task
+---
 
-The goal of this project is to build a simple, API-only backend system using Laravel, Laravel Passport, and PostgreSQL. The system should include user authentication, role-based access control (RBAC), and permission-driven operations applied specifically to the users module. Candidates will implement user login, role assignment, permission assignment, and protected CRUD endpoints where access is determined by the user’s assigned permissions. Additionally, the project requires integrating an external public API by creating an endpoint that fetches and returns user data from a third-party service. All responses must follow a standardized JSON structure. This task is designed to assess the candidate’s understanding of backend architecture, authentication, authorization logic, API development, and external API communication. 
+## 📌 Project Overview
 
-### You are required to build an API-only backend project using:
+This repository contains my submission for the **Backend Engineer (Laravel/PHP) Internship Technical Assignment** at **RAJ Consulting**.
 
-- Laravel
-- Laravel Passport
-- PostgreSQL
-- No UI
-- No RBAC plugins/packages (e.g., Spatie, Laratrust → not allowed)
+The project is an **API-only backend system** built with **Laravel**, **Laravel Passport**, and **PostgreSQL**, focusing on:
 
+- Backend fundamentals
+- Clean architecture
+- Token-based authentication
+- **Custom Role-Based Access Control (RBAC)**
+- Secure, permission-driven user management
+- External API integration
+- Consistent and professional API responses
 
-### You are free to design your database tables, relationships, and structures as you believe best fits the RBAC system.
+All RBAC logic was implemented **from scratch**, without using third-party authorization packages, as explicitly required.
 
-### 1. Authentication (Using Laravel Passport)
- - Implement user authentication with:
- - Registration
- - Login
- - Logout
- - Passport token protection for secured endpoints
+---
 
+## 🧱 Technology Stack
 
-### - 2. RBAC (Roles & Permissions) — Applied Only to User Management
+- **Laravel**
+- **Laravel Passport**
+- **PostgreSQL (Render Managed Database)**
+- **Docker**
+- **Render (Deployment Platform)**
 
-You must implement a custom Role-Based Access Control system that restricts access to user-related actions.
+---
 
-### Your design should include:
+## 🔐 Authentication (Laravel Passport)
 
-- Roles
-- Permissions
-- Assigning permissions to roles
-- Assigning roles to users
-- Authorization checks (via middleware)
+Authentication is implemented using **Laravel Passport** with personal access tokens.
 
-Your RBAC logic must control access to the User CRUD module.
+### Available Endpoints
 
-### 3. User CRUD With Role + Permission Enforcement
-Implement:
-- Create User
-- Retrieve Users (list + single)
-- Update User
-- Delete User
+| Method | Endpoint | Description |
+|------|---------|------------|
+| POST | `/api/v1/register` | Register a new user |
+| POST | `/api/v1/login` | Authenticate and receive token |
+| POST | `/api/v1/logout` | Revoke current access token |
 
-Design permissions for these actions as you see fit.
-Only authorized users should be allowed to perform each action.
+All protected endpoints require a valid **Bearer token**.
 
-### 4. External API Integration
-Create one endpoint:
+---
 
-GET /external/users
+## 🧩 Custom RBAC Implementation (No Packages)
 
-This endpoint must:
-Call the public API:
+### ❗ Important Note
+
+RBAC was implemented **manually**, without packages such as Spatie or Laratrust, to demonstrate a strong understanding of backend authorization principles.
+
+---
+
+### Database Design
+
+The RBAC system uses the following tables:
+
+```
+users
+roles
+permissions
+role_user        (user ↔ role)
+role_permission  (role ↔ permission)
+```
+
+---
+
+### Roles Definition
+
+| Role | Access Level |
+|----|-------------|
+| Super Admin | Full system access |
+| Admin | Full system access |
+| Basic User | Read-only access |
+
+---
+
+### Permissions
+
+| Permission |
+|-----------|
+| read |
+| write |
+| view_users |
+| create_users |
+| edit_users |
+| delete_users |
+
+---
+
+### Permission Assignment Rules
+
+- **Super Admin** → All permissions
+- **Admin** → All permissions
+- **Basic User** → Read-only permission (`read`)
+
+---
+
+### Permission Resolution Logic
+
+```php
+public function hasPermission(string $permission): bool
+{
+    return $this->roles()
+        ->whereHas('permissions', function ($query) use ($permission) {
+            $query->where('name', $permission);
+        })
+        ->exists();
+}
+```
+
+Authorization checks are enforced using **custom middleware** applied to protected routes.
+
+---
+
+## 👥 User Management (RBAC Enforced)
+
+User management endpoints are fully protected by RBAC.
+
+| Method | Endpoint | Required Permission |
+|------|---------|--------------------|
+| GET | `/api/v1/users` | view_users |
+| GET | `/api/v1/users/{id}` | view_users |
+| POST | `/api/v1/users` | create_users |
+| PUT | `/api/v1/users/{id}` | edit_users |
+| DELETE | `/api/v1/users/{id}` | delete_users |
+
+---
+
+## 🌐 External API Integration
+
+### Endpoint
+
+```
+GET /api/v1/external/users
+```
+
+This endpoint fetches user data from the public API:
+
+```
 https://jsonplaceholder.typicode.com/users
-Retrieve and return the list of users
-Follow the required response format
-Handle errors gracefully
+```
 
-### 5. Response Format (Required for All Endpoints)
-All responses must follow this structure:
+Errors are handled gracefully, and responses follow the standard API format.
+
+---
+
+## 📦 Standard API Response Format
+
+### Success Response
+```json
 {
   "success": true,
   "code": 200,
   "data": {},
   "message": "message"
 }
+```
 
-
-Error format:
+### Error Response
+```json
 {
   "success": false,
   "code": 400,
   "data": {},
   "message": "error message"
 }
+```
 
-📂 Deliverables
-### 1. GitHub Repository Link (Required)
-Must include:
-Laravel source code
-Migrations
-Models
-Controllers
-Middleware
-.env.example
-README.md with setup and run instructions
+---
+
+## 🧪 Testing Credentials (Super Admin)
+
+Use the following credentials to test full system access:
+
+```
+Email: superadmin@example.com
+Password: password
+```
+
+> This account has **Super Admin** privileges and unrestricted access to all protected endpoints.
+
+---
+
+## 🐳 Local Setup (Docker)
+
+### Prerequisites
+- Docker
+- Docker Compose
+
+---
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/<your-username>/<repository-name>.git
+cd <repository-name>
+```
+
+---
+
+### Environment Configuration
+
+```bash
+cp .env.example .env
+```
+
+Update the `.env` file with your **Render PostgreSQL** credentials.
+
+---
+
+### Build and Run Containers
+
+```bash
+docker compose build
+docker compose up -d
+```
+
+---
+
+### Run Migrations & Passport Setup
+
+```bash
+docker compose exec app php artisan migrate
+docker compose exec app php artisan passport:install --force
+```
+
+---
+
+### Seed Database (RBAC + Users)
+
+```bash
+docker compose exec app php artisan db:seed
+```
+
+This will:
+- Reset RBAC tables
+- Create roles and permissions
+- Generate 20 users
+- Assign exactly one Super Admin
+
+---
+
+## 🗄️ Database
+
+- PostgreSQL hosted on **Render**
+- Foreign key constraints enforced
+- No credentials committed to source control
+
+---
+
+## 🚀 Deployment
+
+- Docker-based deployment on **Render**
+- Managed PostgreSQL database
+- Environment variables configured via Render dashboard
+
+**Production Base URL:**  
+👉 https://backend-engineer-technical-task.onrender.com
+
+---
+
+## 📮 Postman Collection
+
+A public Postman collection is included and contains:
+- Authentication flows
+- RBAC-protected user management
+- External API endpoint
+
+---
+
+## 📝 Final Notes for Reviewers
+
+- RBAC implemented **without third-party authorization packages**
+- Authorization enforced via middleware
+- Clean separation of concerns
+- Designed to be extensible and production-ready
+
+---
+
+## 👨‍💻 Author
+
+Backend Engineer (Laravel/PHP) Internship Technical Assignment  
+**RAJ Consulting**
