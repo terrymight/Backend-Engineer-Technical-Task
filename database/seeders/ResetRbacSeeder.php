@@ -10,6 +10,7 @@ class ResetRbacSeeder extends Seeder
     /**
      * Truncate tables
      * php artisan db:seed --class=ResetRbacSeeder
+     * 
      */
     public function run(): void
     {
