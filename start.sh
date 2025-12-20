@@ -7,10 +7,7 @@ echo "Running migrations..."
 php artisan migrate --force
 
 echo "Installing Passport keys..."
-php artisan passport:install --force -y
-
-echo "Starting PHP-FPM..."
-php-fpm
+php artisan passport:install --force --no-interaction
 
 echo "Starting passport..."
 php artisan passport:client --personal --provider=users
