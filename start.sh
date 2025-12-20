@@ -16,11 +16,12 @@ php artisan passport:install --force --no-interaction
 
 echo "Fixing Passport key permissions..."
 chown www-data:www-data storage/oauth-private.key storage/oauth-public.key
-chmod 640 storage/oauth-private.key
-chmod 644 storage/oauth-public.key
+chmod 600 storage/oauth-private.key
+chmod 600 storage/oauth-public.key
 
 echo "Starting PHP-FPM..."
 php-fpm &
 
 echo "Starting Nginx..."
 nginx -g "daemon off;"
+1
