@@ -14,8 +14,10 @@ php artisan migrate --force --no-interaction
 echo "Installing Passport keys..."
 php artisan passport:install --force --no-interaction
 
-echo "Verifying Passport keys..."
-ls -l storage/oauth-*.key
+echo "Fixing Passport key permissions..."
+chown www-data:www-data storage/oauth-private.key storage/oauth-public.key
+chmod 640 storage/oauth-private.key
+chmod 644 storage/oauth-public.key
 
 echo "Starting PHP-FPM..."
 php-fpm &
