@@ -1,9 +1,8 @@
 FROM php:8.4-fpm
 
-# System packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     nginx \
-    supervisor \
     git \
     curl \
     zip \
@@ -16,8 +15,6 @@ RUN apt-get update && apt-get install -y \
         pdo_pgsql \
         mbstring \
         zip \
-        exif \
-        pcntl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -27,16 +24,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # App directory
 WORKDIR /var/www
 
-# Copy app
+# Copy app files
 COPY . .
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
-
-# Laravel optimizations
-RUN php artisan config:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
 
 # Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
@@ -44,13 +36,10 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 # Nginx config
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# Supervisor config
-COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
-EXPOSE 10000
-CMD ["/usr/bin/supervisord"]
-
+# Startup script
 COPY start.sh /var/www/start.sh
 RUN chmod +x /var/www/start.sh
+
+EXPOSE 10000
 
 CMD ["/var/www/start.sh"]
