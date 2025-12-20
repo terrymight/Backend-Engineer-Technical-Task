@@ -49,3 +49,8 @@ COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 10000
 CMD ["/usr/bin/supervisord"]
+
+COPY start.sh /var/www/start.sh
+RUN chmod +x /var/www/start.sh
+
+CMD ["/var/www/start.sh"]
