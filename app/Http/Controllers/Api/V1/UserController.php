@@ -18,7 +18,7 @@ class UserController extends BaseController
         $this->middleware('permission:delete_users')->only('destroy');
     }
 
-
+ 
     /**
      * Display a listing of the resource.
      */
@@ -45,7 +45,7 @@ class UserController extends BaseController
             'password' => Hash::make($validated['password']),
         ]);
 
-        if (isset($validated['role'])) {
+        if (isset($validated['role'])) { 
             $user->assignRole($validated['role']);
         } else {
             // Assign a default role if needed
